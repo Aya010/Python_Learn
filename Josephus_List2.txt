@@ -1,0 +1,10 @@
+ZhaoYi 11 Male
+QianEr 22 Male
+SunSan 33 Male
+LiSi 44 Male
+ZhouWu 55 Female
+WuLiu 66 Female
+ZhenQi 77 Female
+WangErmazi 88 Female
+Python 99 Object
+GitHub 101 Website
