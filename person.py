@@ -5,7 +5,10 @@ class Person():
     def __init__(self, name, age, gender):
         self.name = name
         self.age = age
-        self.gender = gender
+        if gender == 0:
+            self.gender = "Male"
+        else:
+            self.gender = "Female"
     def get_name(self):
         return self.name
     def get_age(self):
@@ -13,4 +16,4 @@ class Person():
     def get_gender(self):
         return self.gender
     def __str__(self):
-        return "Name:%s\nAge:%s\nGender:%s" % (self.name, self.age, self.gender)
+        return "Name:%s\nAge:%d\nGender:%s" % (self.name, self.age, self.gender)
