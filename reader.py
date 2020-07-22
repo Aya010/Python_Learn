@@ -11,24 +11,21 @@ class Reader:
     ext = None
 
     def __init__(self, file_name):
-        self._file = file_name
-        suffix = os.path.splitext(file_name)[1]
+        self._file_name = file_name
+
+    def read(self, people_list):
+        suffix = os.path.splitext(self._file_name)[1]
         for x in Reader.__subclasses__():
             if suffix == x.ext:
-                self._func = x(file_name)
-
-    def read(self,  people_list):
-        return self._func.read(people_list)
+                people_list = x.read(self, people_list)
+        return people_list
 
 
 class TxtReader(Reader):
     ext = ".txt"
 
-    def __init__(self, txt_file):
-        self.file_name = txt_file
-
     def read(self, people_list):
-        with open(self.file_name) as txt_file:
+        with open(self._file_name) as txt_file:
             for line in txt_file:
                 line_words = line.split(" ")
                 person_ = person.Person(line_words[0], eval(
@@ -37,7 +34,7 @@ class TxtReader(Reader):
         return people_list
 
     def __iter__(self):
-        with open(self.file_name) as txt_file:
+        with open(self._file_name) as txt_file:
             for line in txt_file:
                 line_words = line.split(" ")
                 person_ = person.Person(line_words[0], eval(
@@ -48,11 +45,8 @@ class TxtReader(Reader):
 class CsvReader(Reader):  # return a list
     ext = '.csv'
 
-    def __init__(self, csv_file):
-        self.file_name = csv_file
-
     def read(self, people_list):
-        with open(self.file_name, 'r') as csvfile:
+        with open(self._file_name, 'r') as csvfile:
             lines = csv.reader(csvfile, delimiter=' ')
             for line in lines:
                 line_words = line[0].split(",")
@@ -62,7 +56,7 @@ class CsvReader(Reader):  # return a list
         return people_list
 
     def __iter__(self):
-        with open(self.file_name) as csv_file:
+        with open(self._file_name) as csv_file:
             for line in csv_file:
                 line_words = line.split(",")
                 person_ = person.Person(line_words[0], eval(
@@ -73,11 +67,8 @@ class CsvReader(Reader):  # return a list
 class ZipReader(Reader):  # return a list
     ext = '.zip'
 
-    def __init__(self, zip_file):
-        self.file_name = zip_file
-
     def read(self, people_list):
-        with zipfile.ZipFile(self.file_name, 'r') as zip_reader:
+        with zipfile.ZipFile(self._file_name, 'r') as zip_reader:
             file_list = zip_reader.namelist()
             for file_ in file_list:
                 read_file = zip_reader.read(file_).decode('UTF-8')
@@ -117,7 +108,7 @@ class ZipReaderCsv(ZipReader):
         return people_list
 
 """    def read(self):
-        with zipfile.ZipFile(self.file_name, 'r') as ZipReader:
+        with zipfile.ZipFile(self._file_name, 'r') as ZipReader:
             file_list = ZipReader.namelist()
             ZipReader.extractall()
             for file_ in file_list:
@@ -136,6 +127,7 @@ class ZipReaderCsv(ZipReader):
 
 
 if __name__ == "__main__":
+
     ring_txt = []
     func = Reader("josephus_list2.txt")
     ring_txt = func.read(ring_txt)
